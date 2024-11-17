@@ -72,5 +72,15 @@ userSchema.methods.validatePw = async function (pwInputByUser) {
   return isPwValid;
 };
 
+userSchema.methods.toLoginResponse = function () {
+  return {
+    firstName: this.firstName,
+    lastName: this.lastName,
+    emailId: this.emailId,
+    skills: this.skills,
+    photoUrl: this.photoUrl,
+  };
+};
+
 const userModel = mongoose.model("User", userSchema);
 module.exports = userModel;

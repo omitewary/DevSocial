@@ -29,7 +29,7 @@ router.post("/login", async (req, res) => {
     if (isPwValid) {
       const token = await user.getJWT();
       res.cookie("token", token);
-      res.send("Login successful");
+      res.json({ message: "Login Successfull", data: user.toLoginResponse() });
     } else {
       throw new Error("Invalid Credentials");
     }
