@@ -11,7 +11,7 @@ const {
 router.get("/profile/view", userAuth, async (req, res) => {
   try {
     const { user } = req;
-    res.send(user);
+    res.json({ message: "fetched user data", data: user });
   } catch (error) {
     res.send(400).send("ERROR: " + error.message);
   }

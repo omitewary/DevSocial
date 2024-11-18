@@ -79,6 +79,9 @@ userSchema.methods.toLoginResponse = function () {
     emailId: this.emailId,
     skills: this.skills,
     photoUrl: this.photoUrl,
+    about: this.about,
+    age: this.age,
+    gender: this.gender,
   };
 };
 
