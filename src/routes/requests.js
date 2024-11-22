@@ -6,11 +6,13 @@ const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/user");
 
 router.post("/request/send/:status/:toUserId", userAuth, async (req, res) => {
+  console.log("requet send :", req.user._id);
   try {
     const fromUserId = req.user._id;
     const toUserId = req.params.toUserId;
     const status = req.params.status;
-
+    console.log("user:", fromUserId);
+    console.log("fromUserId ", fromUserId);
     const allowedStatus = ["ignored", "interested"];
     if (!allowedStatus.includes(status)) {
       throw new Error("Invalid status type " + status);
@@ -45,7 +47,7 @@ router.post("/request/send/:status/:toUserId", userAuth, async (req, res) => {
       toUserId,
       status,
     });
-
+    console.log("connectionRequest ", connectionRequest);
     const data = await connectionRequest.save();
     res.json({
       message: `${req.user.firstName} ${status}  - ${toUser.firstName}`,
@@ -74,6 +76,7 @@ router.post(
         toUserId: loggedInUser._id,
         status: "interested",
       });
+
       if (!connectionRequest) {
         return res
           .status(400)

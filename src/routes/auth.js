@@ -6,16 +6,7 @@ const User = require("../models/user");
 const { validateSignupData } = require("../utils/validation");
 
 router.post("/signup", async (req, res) => {
-  const {
-    firstName,
-    lastName,
-    emailId,
-    password,
-    skills,
-    gender,
-    photoUrl,
-    about,
-  } = req.body;
+  const { firstName, lastName, emailId, password } = req.body;
   try {
     validateSignupData(req);
     const hashPw = await bcrypt.hash(password, 10);
@@ -24,13 +15,16 @@ router.post("/signup", async (req, res) => {
       lastName,
       emailId,
       password: hashPw,
-      skills,
-      gender,
-      photoUrl,
-      about,
     });
-    await user.save();
-    res.send("Data added successfully");
+
+    const isPwValid = await user.validatePw(password);
+    if (isPwValid) {
+      const token = await user.getJWT();
+      res.cookie("token", token);
+    }
+
+    const data = await user.save();
+    res.json({ message: "User added successfully", data: data });
   } catch (error) {
     res.status(400).send("ERROR: " + error.message);
   }
@@ -43,6 +37,7 @@ router.post("/login", async (req, res) => {
     if (!user) {
       return res.status(401).send("Invalid Credentials");
     }
+
     const isPwValid = await user.validatePw(password);
     if (isPwValid) {
       const token = await user.getJWT();
